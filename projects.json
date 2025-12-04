@@ -1,0 +1,16 @@
+{
+  "projects": [
+    {
+      "id": 1705316345125,
+      "title": "AI Platforma za Edukaciju",
+      "description": "Razvoj AI platforme za personalizirano učenje",
+      "funding": 50000,
+      "category": "tech",
+      "entrepreneur_id": 1705316345123,
+      "entrepreneur_name": "Marko Horvat",
+      "status": "active",
+      "created_at": "2024-01-15T12:00:00.000Z",
+      "progress": 0
+    }
+  ]
+}

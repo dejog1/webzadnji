@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvestIT - Platforma za poduzetnike i investitore</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-left">
+                    <!-- Lijevo prazno za balans -->
+                </div>
+                <div class="navbar-center">
+                    <a href="#" class="logo">InvestIT</a>
+                </div>
+                <div class="navbar-right">
+                    <div class="auth-buttons" id="authButtons">
+                        <button class="btn btn-outline" id="loginBtn">Prijava</button>
+                        <button class="btn btn-primary" id="registerBtn">Registracija</button>
+                    </div>
+                    <div class="user-menu" id="userMenu">
+                        <span id="userName"></span>
+                        <button class="btn btn-outline" id="logoutBtn">Odjava</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="mainContent">
+        <section class="hero">
+            <div class="container">
+                <h1>Povezujemo poduzetnike i investitore</h1>
+                <p>InvestIT je platforma koja omogućuje mladim poduzetnicima da pronađu investitore za svoje ideje, a investitorima da pronađu perspektivne projekte za ulaganje.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="heroEntrepreneurBtn">Registriraj se kao poduzetnik</button>
+                    <button class="btn btn-outline" id="heroInvestorBtn">Registriraj se kao investitor</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">O nama</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3>Za poduzetnike</h3>
+                        <p>Objavite svoju poslovnu ideju, viziju i potrebna sredstva. Pronađite investitore koji vjeruju u vaš projekt i žele uložiti u njega.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Za investitore</h3>
+                        <p>Pregledajte projekte mladih poduzetnika, odaberite one koji vam se čine perspektivnima i investirajte u njih.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🤝</div>
+                        <h3>Povezivanje</h3>
+                        <p>Naša platforma olakšava komunikaciju između poduzetnika i investitora, omogućujući jednostavno dogovaranje uvjeta suradnje.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">Kako funkcionira</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Registracija</h3>
+                        <p>Registrirajte se kao poduzetnik ili investitor i popunite svoj profil.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Objavite/pretražite</h3>
+                        <p>Poduzetnici objavljuju projekte, investitori pretražuju i pronalaze zanimljive prilike.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Kontaktirajte</h3>
+                        <p>Investitori kontaktiraju poduzetnike čiji im se projekt sviđa i predlažu uvjete suradnje.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Dogovor</h3>
+                        <p>Zaključite dogovor o ulaganju i započnite suradnju.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 class="section-title">Kontaktirajte nas</h2>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <h3>Imate pitanja?</h3>
+                        <p>Javite nam se putem kontakt forme ili koristite podatke u nastavku.</p>
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <div class="contact-icon">📍</div>
+                                <div>
+                                    <strong>Adresa</strong><br>
+                                    Ulica poduzetništva 1, 10000 Zagreb
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">📞</div>
+                                <div>
+                                    <strong>Telefon</strong><br>
+                                    +385 1 234 5678
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">✉️</div>
+                                <div>
+                                    <strong>Email</strong><br>
+                                    info@investit.hr
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">🕒</div>
+                                <div>
+                                    <strong>Radno vrijeme</strong><br>
+                                    Ponedjeljak - Petak: 9:00 - 17:00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="contactName">Ime i prezime</label>
+                                <input type="text" id="contactName" name="contactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email adresa</label>
+                                <input type="email" id="contactEmail" name="contactEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactSubject">Predmet</label>
+                                <input type="text" id="contactSubject" name="contactSubject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Poruka</label>
+                                <textarea id="contactMessage" name="contactMessage" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Pošalji poruku</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="dashboard-welcome">
+                    <div class="user-info">
+                        <h2>Dobrodošli, <span id="welcomeUserName">Korisnik</span>!</h2>
+                        <p id="userRoleText"></p>
+                    </div>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-success" id="addProjectBtn">+ Novi Projekt</button>
+                        <button class="btn btn-primary" id="myProfileBtn">Moj Profil</button>
+                        <button class="btn btn-primary" id="browseBtn" style="display: none;">Pregledaj Projekte</button>
+                        <button class="btn btn-primary" id="myInvestmentsBtn" style="display: none;">Moja Ulaganja</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number" id="projectsCount">0</div>
+                    <div class="stat-label">Aktivnih projekata</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="investorsCount">0</div>
+                    <div class="stat-label">Registriranih investitora</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="messagesCount">0</div>
+                    <div class="stat-label">Novih poruka</div>
+                </div>
+            </div>
+
+            <div class="dashboard-section" id="entrepreneurSection" style="display: none;">
+                <h3 class="section-title">Preporučeni investitori</h3>
+                <div class="investors-grid" id="investorsGrid"></div>
+            </div>
+
+            <div class="dashboard-section" id="investorSection" style="display: none;">
+                <h3 class="section-title">Preporučeni projekti</h3>
+                <div class="projects-grid" id="projectsGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Registracija</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="user-type-selector">
+                <div class="user-type active" data-type="entrepreneur">Poduzetnik</div>
+                <div class="user-type" data-type="investor">Investitor</div>
+            </div>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="name">Ime i prezime</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email adresa</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Lozinka</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group" id="entrepreneurFields">
+                    <label for="projectName">Naziv projekta</label>
+                    <input type="text" id="projectName" name="projectName">
+                    <label for="projectDescription">Opis projekta</label>
+                    <textarea id="projectDescription" name="projectDescription" rows="3" placeholder="Opišite svoju poslovnu ideju, viziju i ciljeve..."></textarea>
+                    <label for="fundingNeeded">Potrebna sredstva (€)</label>
+                    <input type="number" id="fundingNeeded" name="fundingNeeded" placeholder="Unesite iznos koji vam je potreban">
+                    <label for="businessStage">Faza poslovanja</label>
+                    <select id="businessStage" name="businessStage">
+                        <option value="">Odaberite fazu</option>
+                        <option value="idea">Ideja</option>
+                        <option value="prototype">Prototip</option>
+                        <option value="early">Rana faza</option>
+                        <option value="growth">Rast</option>
+                    </select>
+                </div>
+                <div class="form-group" id="investorFields" style="display: none;">
+                    <label for="investmentFocus">Područje interesa</label>
+                    <select id="investmentFocus" name="investmentFocus">
+                        <option value="">Odaberite područje interesa</option>
+                        <option value="tech">Tehnologija</option>
+                        <option value="health">Zdravstvo</option>
+                        <option value="education">Obrazovanje</option>
+                        <option value="finance">Financije</option>
+                        <option value="energy">Energija</option>
+                        <option value="other">Ostalo</option>
+                    </select>
+                    <label for="investmentRange">Raspon ulaganja (€)</label>
+                    <select id="investmentRange" name="investmentRange">
+                        <option value="">Odaberite raspon</option>
+                        <option value="0-10000">Do 10.000</option>
+                        <option value="10000-50000">10.000 - 50.000</option>
+                        <option value="50000-100000">50.000 - 100.000</option>
+                        <option value="100000+">Preko 100.000</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Registriraj se</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">Već imate račun? <a href="#" id="switchToLogin">Prijavite se</a></p>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div class="modal" id="projectModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Dodaj novi projekt</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label for="projectTitle">Naziv projekta</label>
+                    <input type="text" id="projectTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription">Opis projekta</label>
+                    <textarea id="projectDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="projectFunding">Potrebna sredstva (€)</label>
+                    <input type="number" id="projectFunding" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Objavi projekt</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>InvestIT</h3>
+                    <p>Platforma za povezivanje poduzetnika i investitora.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Brzi linkovi</h3>
+                    <ul>
+                        <li><a href="#about">O nama</a></li>
+                        <li><a href="#how-it-works">Kako radi</a></li>
+                        <li><a href="#contact">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Podrška</h3>
+                    <ul>
+                        <li><a href="#">Pomoć</a></li>
+                        <li><a href="#">Uvjeti korištenja</a></li>
+                        <li><a href="#">Pravila privatnosti</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontakt</h3>
+                    <ul>
+                        <li>Email: info@investit.hr</li>
+                        <li>Telefon: +385 1 234 5678</li>
+                        <li>Adresa: Zagreb, Hrvatska</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 InvestIT. Sva prava pridržana.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

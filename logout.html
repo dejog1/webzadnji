@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odjava - InvestIT</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="navbar-center">
+                    <a href="index.html" class="logo">InvestIT</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="logout-content" style="text-align: center; padding: 4rem 0;">
+                    <div class="success-icon" style="font-size: 4rem; margin-bottom: 2rem;">✅</div>
+                    <h1 style="color: white; margin-bottom: 1rem;">Uspješno ste odjavljeni</h1>
+                    <p style="color: white; font-size: 1.2rem; margin-bottom: 3rem; opacity: 0.9;">
+                        Hvala vam što ste koristili InvestIT platformu.
+                    </p>
+                    <div class="logout-actions">
+                        <a href="index.html" class="btn btn-primary" style="margin-right: 1rem;">
+                            Povratak na početnu stranicu
+                        </a>
+                        <a href="#" class="btn btn-outline" onclick="window.close()">
+                            Zatvori prozor
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 InvestIT. Sva prava pridržana.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Automatski preusmjeravanje nakon 5 sekundi
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 5000);
+    </script>
+</body>
+</html>

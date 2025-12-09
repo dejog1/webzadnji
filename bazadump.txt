@@ -1,0 +1,166 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Dec 09, 2025 at 12:27 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `investit_db`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `entrepreneur_profiles`
+--
+
+CREATE TABLE `entrepreneur_profiles` (
+  `user_id` int(11) NOT NULL,
+  `project_name` varchar(255) DEFAULT NULL,
+  `project_description` text DEFAULT NULL,
+  `funding_needed` decimal(10,2) DEFAULT NULL,
+  `business_stage` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `entrepreneur_profiles`
+--
+
+INSERT INTO `entrepreneur_profiles` (`user_id`, `project_name`, `project_description`, `funding_needed`, `business_stage`) VALUES
+(1, 'moj startup', 'stranica za investitore', 150000.00, 'Ideja');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `investor_profiles`
+--
+
+CREATE TABLE `investor_profiles` (
+  `user_id` int(11) NOT NULL,
+  `investment_focus` varchar(50) DEFAULT NULL,
+  `investment_range` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `projects`
+--
+
+CREATE TABLE `projects` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `funding_needed` decimal(10,2) NOT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('entrepreneur','investor') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `created_at`) VALUES
+(1, 'Dejan Grabovac', 'dejangrabovac1@gmail.com', '$2y$10$w6Rygr2t42IbzcH6q003IepcqedpzETKvnammzOLw/L5sS/Ujrp7G', 'entrepreneur', '2025-12-08 23:24:49');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `entrepreneur_profiles`
+--
+ALTER TABLE `entrepreneur_profiles`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `investor_profiles`
+--
+ALTER TABLE `investor_profiles`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `projects`
+--
+ALTER TABLE `projects`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `entrepreneur_profiles`
+--
+ALTER TABLE `entrepreneur_profiles`
+  ADD CONSTRAINT `entrepreneur_profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `investor_profiles`
+--
+ALTER TABLE `investor_profiles`
+  ADD CONSTRAINT `investor_profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `projects`
+--
+ALTER TABLE `projects`
+  ADD CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

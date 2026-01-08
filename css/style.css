@@ -7,6 +7,11 @@
   --success-color: #27ae60;
   --warning-color: #f39c12;
 }
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+}
 
 * {
   margin: 0;
@@ -468,3 +473,36 @@ section {
 }
 
 /* Ostatak tvog originalnog CSS-a – sve je tu, ništa nije izbrisano osim jedne linije */
+
+/* Dodatno poboljšanje responzivnosti */
+@media (max-width: 768px) {
+  .dashboard-welcome {
+    flex-direction: column;
+    text-align: center;
+  }
+  .dashboard-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .projects-grid {
+    grid-template-columns: 1fr; /* Jedan stupac na mobitelu */
+  }
+  .stats-cards {
+    grid-template-columns: 1fr; /* Jedan stupac za statistike */
+  }
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1.5rem;
+  }
+  .btn {
+    width: 100%; /* Buttoni puna širina na malim ekranima */
+    margin-bottom: 1rem;
+  }
+}

@@ -2,28 +2,32 @@
 session_start();
 include 'config.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'investor') {
-    header("Location: index.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $from_id = $_SESSION['user_id'];
-    $to_id = $_POST['to_id'] ?? 0;
-    $message = $_POST['message'] ?? '';
+$user_id = $_SESSION['user_id'];
+$to_id = $_POST['to_id'] ?? null;
+$message_text = trim($_POST['message'] ?? '');
 
-    if ($to_id > 0 && !empty($message)) {
-        $sql = "INSERT INTO messages (from_id, to_id, message) VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iis", $from_id, $to_id, $message);
-        if ($stmt->execute()) {
-            header("Location: dashboard.php?success=message_sent");
-        } else {
-            header("Location: dashboard.php?error=message_failed");
-        }
-    } else {
-        header("Location: dashboard.php?error=invalid_data");
-    }
-    exit;
+if (!$to_id || $message_text === '') {
+    die("Nedostaju obavezni podaci.");
 }
-?>
+
+$stmt = $conn->prepare("
+    INSERT INTO messages 
+    (from_id, to_id, message, created_at, is_read, deleted_by_receiver) 
+    VALUES (?, ?, ?, NOW(), 0, 0)
+");
+$stmt->bind_param("iis", $user_id, $to_id, $message_text);
+$stmt->execute();
+
+// Opcionalno - označi original kao pročitan
+if (!empty($_POST['original_message_id'])) {
+    $orig = (int)$_POST['original_message_id'];
+    $conn->query("UPDATE messages SET is_read = 1 WHERE id = $orig AND to_id = $user_id");
+}
+
+header("Location: dashboard.php");
+exit;

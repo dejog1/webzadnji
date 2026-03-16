@@ -68,8 +68,11 @@ while ($row = $res->fetch_assoc()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Dashboard - InvestIT</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=<?php echo time(); ?>">
     <style>
         .message-card {
             position: relative;
@@ -211,15 +214,14 @@ while ($row = $res->fetch_assoc()) {
 
 <!-- ===================== MODALI ===================== -->
 
-<!-- Dodaj projekt -->
+<!-- Dodaj projekt – BEZ slike -->
 <div class="modal" id="addModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal('addModal')">×</span>
-        <form action="add_project.php" method="post" enctype="multipart/form-data">
+        <form action="add_project.php" method="post">
             <input type="text" name="title" placeholder="Naslov" required>
             <textarea name="description" placeholder="Opis" required></textarea>
             <input type="number" name="funding_needed" placeholder="Sredstva (€)" required>
-            <input type="file" name="image">
             <button class="btn btn-primary">Spremi</button>
         </form>
     </div>
@@ -250,13 +252,13 @@ while ($row = $res->fetch_assoc()) {
     </div>
 </div>
 
-<!-- Uređivanje projekta -->
+<!-- Uređivanje projekta – BEZ slike -->
 <div class="modal" id="editModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal('editModal')">×</span>
         <h3>Uredi projekt</h3>
         
-        <form action="update_project.php" method="post" enctype="multipart/form-data">
+        <form action="update_project.php" method="post">
             <input type="hidden" name="project_id" id="edit_project_id">
 
             <label>Naslov:</label>
@@ -268,8 +270,7 @@ while ($row = $res->fetch_assoc()) {
             <label>Potrebna sredstva (€):</label>
             <input type="number" name="funding_needed" id="edit_funding_needed" step="0.01" required>
 
-            <label>Slika (ostaje ako ne učitate novu):</label>
-            <input type="file" name="image" accept="image/*">
+            <!-- Slika uklonjena – ostaje postojeća ako postoji -->
 
             <div style="margin-top:20px;">
                 <button type="submit" class="btn btn-primary">Spremi promjene</button>

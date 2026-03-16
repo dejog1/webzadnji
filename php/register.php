@@ -1,61 +1,106 @@
 <?php
 session_start();
-include 'config.php';
+require_once 'config.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $role = $_POST['role']; // 'entrepreneur' ili 'investor'
+$errors = [];
+$success = '';
 
-    // Provjera da li email postoji
-    $check_sql = "SELECT id FROM users WHERE email = ?";
-    $check_stmt = $conn->prepare($check_sql);
-    $check_stmt->bind_param("s", $email);
-    $check_stmt->execute();
-    $check_stmt->store_result();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $full_name   = trim($_POST['full_name'] ?? '');
+    $email       = trim($_POST['email'] ?? '');
+    $password    = $_POST['password'] ?? '';
+    $role        = $_POST['role'] ?? '';   // 'entrepreneur' ili 'investor'
 
-    if ($check_stmt->num_rows > 0) {
-        echo "Email već postoji.";
-        exit;
+    // Validacija
+    if (empty($full_name)) {
+        $errors[] = "Ime i prezime su obavezni.";
+    }
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Ispravna email adresa je obavezna.";
+    }
+    if (strlen($password) < 6) {
+        $errors[] = "Lozinka mora imati najmanje 6 znakova.";
+    }
+    if (!in_array($role, ['entrepreneur', 'investor'])) {
+        $errors[] = "Odaberite ulogu (poduzetnik ili investitor).";
     }
 
-    // Insert u users
-    $sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $name, $email, $password, $role);
-
-    if ($stmt->execute()) {
-        $user_id = $stmt->insert_id;
-
-        if ($role == 'entrepreneur') {
-            $project_name = $_POST['projectName'] ?? null;
-            $project_desc = $_POST['projectDescription'] ?? null;
-            $funding = $_POST['fundingNeeded'] ?? null;
-            $stage = $_POST['businessStage'] ?? null;
-
-            $profile_sql = "INSERT INTO entrepreneur_profiles (user_id, project_name, project_description, funding_needed, business_stage) VALUES (?, ?, ?, ?, ?)";
-            $profile_stmt = $conn->prepare($profile_sql);
-            $profile_stmt->bind_param("issds", $user_id, $project_name, $project_desc, $funding, $stage);
-            $profile_stmt->execute();
-        } else {
-            $focus = $_POST['investmentFocus'] ?? null;
-            $range = $_POST['investmentRange'] ?? null;
-
-            $profile_sql = "INSERT INTO investor_profiles (user_id, investment_focus, investment_range) VALUES (?, ?, ?)";
-            $profile_stmt = $conn->prepare($profile_sql);
-            $profile_stmt->bind_param("iss", $user_id, $focus, $range);
-            $profile_stmt->execute();
+    // Provjera postoji li već email
+    if (empty($errors)) {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            $errors[] = "Email adresa je već registrirana.";
         }
+    }
 
-        $_SESSION['user_id'] = $user_id;
-        $_SESSION['role'] = $role;
-        $_SESSION['name'] = $name;
+    // Ako nema grešaka → registracija
+    if (empty($errors)) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        header("Location: dashboard.php");
-        exit;
-    } else {
-        echo "Greška pri registraciji: " . $conn->error;
+        $stmt = $conn->prepare("
+            INSERT INTO users (name, email, password, role, created_at)
+            VALUES (?, ?, ?, ?, NOW())
+        ");
+        $stmt->bind_param("ssss", $full_name, $email, $hashed_password, $role);
+
+        if ($stmt->execute()) {
+            $success = "Registracija uspješna! Možete se prijaviti.";
+        } else {
+            $errors[] = "Greška pri registraciji. Pokušajte kasnije.";
+        }
     }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Registracija - InvestIT</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Registracija</h2>
+
+    <?php if ($success): ?>
+        <div class="alert success"><?php echo $success; ?></div>
+        <p><a href="login.php">Prijavite se ovdje</a></p>
+    <?php endif; ?>
+
+    <?php if (!empty($errors)): ?>
+        <div class="alert error">
+            <?php foreach ($errors as $err): ?>
+                <p><?php echo $err; ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="post">
+        <label>Ime i prezime:</label>
+        <input type="text" name="full_name" value="<?php echo htmlspecialchars($full_name ?? ''); ?>" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
+
+        <label>Lozinka:</label>
+        <input type="password" name="password" required>
+
+        <label>Uloga:</label>
+        <select name="role" required>
+            <option value="">-- Odaberite ulogu --</option>
+            <option value="entrepreneur" <?php echo ($role ?? '') === 'entrepreneur' ? 'selected' : ''; ?>>Poduzetnik</option>
+            <option value="investor" <?php echo ($role ?? '') === 'investor' ? 'selected' : ''; ?>>Investitor</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Registriraj se</button>
+    </form>
+
+    <p>Već imate račun? <a href="login.php">Prijavite se</a></p>
+</div>
+
+</body>
+</html>

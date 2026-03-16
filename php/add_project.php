@@ -1,43 +1,90 @@
 <?php
 session_start();
-include 'config.php';
+require_once 'config.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'entrepreneur') {
-    header("Location: index.php");
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'entrepreneur') {
+    header("Location: dashboard.php");
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user_id = $_SESSION['user_id'];
-    $title = $_POST['title'] ?? '';
-    $description = $_POST['description'] ?? '';
-    $funding_needed = $_POST['funding_needed'] ?? 0;
+$errors = [];
+$success = '';
 
-    // Upload slike
-    $image_path = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $target_dir = "uploads/";
-        $image_name = basename($_FILES["image"]["name"]);
-        $target_file = $target_dir . time() . '_' . $image_name;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $title          = trim($_POST['title'] ?? '');
+    $description    = trim($_POST['description'] ?? '');
+    $funding_needed = (float)($_POST['funding_needed'] ?? 0);
 
-        // Validacija: samo jpg/png/gif, max 2MB
-        if (in_array($imageFileType, ['jpg', 'png', 'jpeg', 'gif']) && $_FILES["image"]["size"] <= 2000000) {
-            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                $image_path = $target_file;
-            }
+    if (empty($title)) {
+        $errors[] = "Naslov je obavezan.";
+    }
+    if (empty($description)) {
+        $errors[] = "Opis je obavezan.";
+    }
+    if ($funding_needed <= 0) {
+        $errors[] = "Potrebna sredstva moraju biti veća od 0.";
+    }
+
+    if (empty($errors)) {
+        $user_id = $_SESSION['user_id'];
+
+        $stmt = $conn->prepare("
+            INSERT INTO projects (user_id, title, description, funding_needed, created_at)
+            VALUES (?, ?, ?, ?, NOW())
+        ");
+        $stmt->bind_param("issd", $user_id, $title, $description, $funding_needed);
+
+        if ($stmt->execute()) {
+            $success = "Projekt uspješno dodan!";
+        } else {
+            $errors[] = "Greška pri dodavanju projekta.";
         }
     }
-
-    // Spremi u bazu
-    $sql = "INSERT INTO projects (user_id, title, description, funding_needed, image_path) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issds", $user_id, $title, $description, $funding_needed, $image_path);
-    if ($stmt->execute()) {
-        header("Location: dashboard.php?success=project_added");
-    } else {
-        header("Location: dashboard.php?error=project_add_failed");
-    }
-    exit;
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodaj projekt - InvestIT</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Dodaj novi projekt</h2>
+
+    <?php if ($success): ?>
+        <div class="alert success"><?php echo $success; ?></div>
+        <p><a href="dashboard.php">Povratak na dashboard</a></p>
+    <?php endif; ?>
+
+    <?php if (!empty($errors)): ?>
+        <div class="alert error">
+            <?php foreach ($errors as $err): ?>
+                <p><?php echo $err; ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="post">
+        <label>Naslov projekta:</label>
+        <input type="text" name="title" required>
+
+        <label>Opis projekta:</label>
+        <textarea name="description" rows="6" required></textarea>
+
+        <label>Potrebna sredstva (€):</label>
+        <input type="number" name="funding_needed" step="0.01" min="1" required>
+
+        <!-- Polje za sliku je uklonjeno -->
+
+        <button type="submit" class="btn btn-primary">Dodaj projekt</button>
+    </form>
+
+    <p><a href="dashboard.php">Odustani i vrati se na dashboard</a></p>
+</div>
+
+</body>
+</html>

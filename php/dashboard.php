@@ -10,14 +10,19 @@ $user_id = $_SESSION['user_id'];
 $name    = $_SESSION['name'];
 $role    = $_SESSION['role'];
 
-// Statistika
-$projects_count  = $conn->query("SELECT COUNT(*) FROM projects")->fetch_row()[0];
-$investors_count = $conn->query("SELECT COUNT(*) FROM users WHERE role='investor'")->fetch_row()[0];
+// === STATISTIKA ===
+$projects_count  = $conn->query("SELECT COUNT(*) FROM projects")->fetch_row()[0] ?? 0;
+$investors_count = $conn->query("SELECT COUNT(*) FROM users WHERE role='investor'")->fetch_row()[0] ?? 0;
 
+// Broj novih poruka (sa zaštitom)
+$new_messages = 0;
 $stmt = $conn->prepare("SELECT COUNT(*) FROM messages WHERE to_id = ? AND is_read = 0 AND deleted_by_receiver = 0");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$new_messages = $stmt->get_result()->fetch_row()[0];
+if ($stmt) {
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $new_messages = $stmt->get_result()->fetch_row()[0] ?? 0;
+    $stmt->close();
+}
 
 // Projekti
 $projects = [];

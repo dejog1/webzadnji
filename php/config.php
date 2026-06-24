@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = ""; // Promijeni ako imaš lozinku
+$password = ""; 
 $dbname = "investit_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

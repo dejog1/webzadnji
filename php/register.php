@@ -9,23 +9,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name   = trim($_POST['full_name'] ?? '');
     $email       = trim($_POST['email'] ?? '');
     $password    = $_POST['password'] ?? '';
-    $role        = $_POST['role'] ?? '';   // 'entrepreneur' ili 'investor'
+    $role        = $_POST['role'] ?? '';
 
     // Validacija
-    if (empty($full_name)) {
-        $errors[] = "Ime i prezime su obavezni.";
-    }
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Ispravna email adresa je obavezna.";
-    }
-    if (strlen($password) < 6) {
-        $errors[] = "Lozinka mora imati najmanje 6 znakova.";
-    }
-    if (!in_array($role, ['entrepreneur', 'investor'])) {
-        $errors[] = "Odaberite ulogu (poduzetnik ili investitor).";
-    }
+    if (empty($full_name)) $errors[] = "Ime i prezime su obavezni.";
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Ispravna email adresa je obavezna.";
+    if (strlen($password) < 6) $errors[] = "Lozinka mora imati najmanje 6 znakova.";
+    if (!in_array($role, ['entrepreneur', 'investor'])) $errors[] = "Odaberite ulogu.";
 
-    // Provjera postoji li već email
+    // Provjera postoji li email
     if (empty($errors)) {
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
@@ -35,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Ako nema grešaka → registracija
+    // Registracija
     if (empty($errors)) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -46,9 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("ssss", $full_name, $email, $hashed_password, $role);
 
         if ($stmt->execute()) {
-            $success = "Registracija uspješna! Možete se prijaviti.";
+            $user_id = $conn->insert_id;
+
+            // === AUTO LOGIN ===
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['role']    = $role;
+            $_SESSION['name']    = $full_name;
+
+            // Preusmjeri na dashboard
+            header("Location: dashboard.php");
+            exit;
         } else {
-            $errors[] = "Greška pri registraciji. Pokušajte kasnije.";
+            $errors[] = "Greška pri registraciji. Pokušajte ponovo.";
         }
     }
 }
@@ -66,34 +67,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <h2>Registracija</h2>
 
-    <?php if ($success): ?>
-        <div class="alert success"><?php echo $success; ?></div>
-        <p><a href="login.php">Prijavite se ovdje</a></p>
-    <?php endif; ?>
-
     <?php if (!empty($errors)): ?>
         <div class="alert error">
             <?php foreach ($errors as $err): ?>
-                <p><?php echo $err; ?></p>
+                <p><?= htmlspecialchars($err) ?></p>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
 
     <form method="post">
         <label>Ime i prezime:</label>
-        <input type="text" name="full_name" value="<?php echo htmlspecialchars($full_name ?? ''); ?>" required>
+        <input type="text" name="full_name" value="<?= htmlspecialchars($full_name ?? '') ?>" required>
 
         <label>Email:</label>
-        <input type="email" name="email" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
+        <input type="email" name="email" value="<?= htmlspecialchars($email ?? '') ?>" required>
 
         <label>Lozinka:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password" required minlength="6">
 
         <label>Uloga:</label>
         <select name="role" required>
             <option value="">-- Odaberite ulogu --</option>
-            <option value="entrepreneur" <?php echo ($role ?? '') === 'entrepreneur' ? 'selected' : ''; ?>>Poduzetnik</option>
-            <option value="investor" <?php echo ($role ?? '') === 'investor' ? 'selected' : ''; ?>>Investitor</option>
+            <option value="entrepreneur" <?= ($role ?? '') === 'entrepreneur' ? 'selected' : '' ?>>Poduzetnik</option>
+            <option value="investor" <?= ($role ?? '') === 'investor' ? 'selected' : '' ?>>Investitor</option>
         </select>
 
         <button type="submit" class="btn btn-primary">Registriraj se</button>

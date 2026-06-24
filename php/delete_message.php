@@ -18,15 +18,14 @@ if ($message_id <= 0) {
 }
 
 $stmt = $conn->prepare("
-    UPDATE messages 
-    SET deleted_by_receiver = 1 
+    DELETE FROM messages 
     WHERE id = ? AND to_id = ?
 ");
 $stmt->bind_param("ii", $message_id, $user_id);
 
 $success = $stmt->execute();
 
-echo json_encode(['success' => $success]);
+echo json_encode(['success' => $success && $stmt->affected_rows > 0]);
 
 $stmt->close();
 $conn->close();
